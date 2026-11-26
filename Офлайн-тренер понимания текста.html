@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Офлайн-тренер понимания текста</title>
+<style>
+:root{--bg:#fbfaf6;--surf:#fff;--ink:#1d2433;--mute:#5d6678;--line:#e3e0d6;--acc:#0e7c86;--acc2:#e0a526;--accbg:#e4f3f4;--warn:#b4472f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121722;--surf:#1a2130;--ink:#eceff5;--mute:#9aa3b5;--line:#2b3447;--acc:#4cc3cc;--acc2:#f0bb45;--accbg:#173037;--warn:#ee8d75;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121722;--surf:#1a2130;--ink:#eceff5;--mute:#9aa3b5;--line:#2b3447;--acc:#4cc3cc;--acc2:#f0bb45;--accbg:#173037;--warn:#ee8d75;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.nav .wrap{display:flex;gap:18px;align-items:center;overflow-x:auto;height:52px;white-space:nowrap}
+header.nav b{color:var(--acc)}
+header.nav a{color:var(--mute);text-decoration:none;font-size:15px}
+header.nav a:hover{color:var(--ink)}
+.hero{padding:64px 0 40px}
+.tag{display:inline-block;background:var(--accbg);color:var(--acc);padding:4px 12px;border-radius:99px;font-size:14px;font-weight:600}
+h1{font-size:clamp(32px,6vw,54px);line-height:1.1;margin:18px 0 16px;letter-spacing:-.02em}
+.lead{font-size:20px;color:var(--mute);max-width:700px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:36px 0 0}
+.stat{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:18px}
+.stat .n{font-size:38px;font-weight:700;color:var(--acc);line-height:1}
+.stat .t{color:var(--mute);font-size:15px;margin-top:8px}
+section{padding:44px 0;border-top:1px solid var(--line)}
+h2{font-size:30px;margin:0 0 14px;letter-spacing:-.01em}
+p{margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin-top:20px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h3{margin:0 0 8px;font-size:19px}
+.card .num{width:34px;height:34px;border-radius:50%;background:var(--acc);color:var(--bg);display:grid;place-items:center;font-weight:700;margin-bottom:12px}
+.card p,.card li{color:var(--mute);font-size:16px}
+.card ul{padding-left:20px;margin:8px 0 0}
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0}
+.node{background:var(--accbg);border:1px solid var(--acc);color:var(--ink);padding:10px 16px;border-radius:10px;font-size:15px;font-weight:600}
+.arrow{color:var(--acc);font-size:22px}
+.note{border-left:4px solid var(--acc2);padding:4px 0 4px 16px;color:var(--mute)}
+.levels{display:grid;gap:10px;margin-top:18px}
+.lvl{display:flex;gap:14px;align-items:center;background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.lvl b{color:var(--acc);min-width:110px}
+.risk{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:18px;background:var(--surf)}
+.risk div{padding:14px 18px;border-bottom:1px solid var(--line);font-size:16px}
+.risk div:nth-last-child(-n+2){border-bottom:0}
+.risk .h{color:var(--warn);font-weight:600}
+.risk .s{color:var(--mute);border-left:1px solid var(--line)}
+@media(max-width:620px){.risk{grid-template-columns:1fr}.risk .s{border-left:0}.risk div:nth-last-child(2){border-bottom:1px solid var(--line)}}
+.cta{background:var(--accbg);border-radius:16px;padding:28px;margin-top:20px}
+.cta b{color:var(--acc)}
+footer{padding:30px 0 50px;color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+<b>📖 Читать и понимать</b><a href="#problem">Проблема</a><a href="#idea">Решение</a><a href="#school">В школе</a><a href="#pilot">Проверка</a><a href="#risks">Риски</a><a href="#scale">Масштаб</a>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+<span class="tag">Кейс 3 · Образование</span>
+<h1>Офлайн-тренер понимания текста для 7–9 классов</h1>
+<p class="lead">ИИ даёт каждому ученику быструю обратную связь по чтению, а работает без стабильного интернета, в том числе в сельской школе.</p>
+<div class="stats">
+<div class="stat"><div class="n">36%</div><div class="t">казахстанских 15-летних достигли уровня 2 по чтению (PISA-2025)</div></div>
+<div class="stat"><div class="n">64%</div><div class="t">не достигли базового уровня</div></div>
+<div class="stat"><div class="n">22 680</div><div class="t">школьников из 643 организаций образования в выборке</div></div>
+<div class="stat"><div class="n">18</div><div class="t">баллов разрыв город–село по математике (PISA-2022)</div></div>
+</div>
+</div>
+
+<section id="problem">
+<h2>Проблема</h2>
+<p>Дети читают, но не умеют <b>находить информацию, сопоставлять факты и делать вывод</b>. Этому учит только регулярная практика с быстрой обратной связью.</p>
+<p>Учителю в классе из 25 человек, особенно в малокомплектной школе, трудно проверить каждый ответ каждого ученика. Здесь ИИ полезен больше всего, но решение должно жить без интернета.</p>
+</section>
+
+<section id="idea">
+<h2>Идея: облако готовит, школа работает локально</h2>
+<div class="flow">
+<span class="node">Облачная модель</span><span class="arrow">→</span><span class="node">Проверка методистами</span><span class="arrow">→</span><span class="node">Банк заданий</span><span class="arrow">→</span><span class="node">Школьный мини-хаб</span><span class="arrow">→</span><span class="node">Ученик</span>
+</div>
+<div class="grid">
+<div class="card"><div class="num">1</div><h3>Контент создаётся централизованно</h3>
+<p>Раз в месяц большая модель генерирует задания в формате PISA: объявления, таблицы, графики, новости, рассказы. Вопросы трёх уровней: найти, интегрировать, оценить. Методисты и носители языка всё проверяют, поэтому ученик не получает непроверенный текст.</p></div>
+<div class="card"><div class="num">2</div><h3>Мини-хаб в школе</h3>
+<p>Недорогой мини-ПК или ноутбук учителя с небольшой квантованной моделью (1–3 млрд параметров). Работает офлайн и:</p>
+<ul><li>объясняет ошибку</li><li>даёт наводящую подсказку, не ответ</li><li>подбирает следующее задание</li></ul></div>
+<div class="card"><div class="num">3</div><h3>Бумага как запасной вариант</h3>
+<p>Нет устройств? Хаб печатает рабочие листы по уровням, а ответы проверяются по ключу с разбором типичных ошибок. Решение не зависит от техники.</p></div>
+</div>
+<p class="note" style="margin-top:22px">Синхронизация раз в одну–две недели: хаб забирает новый банк заданий и отправляет обезличенную статистику. Хватает одного сеанса связи, в том числе в райцентре или через USB.</p>
+<div class="levels">
+<div class="lvl"><b>Уровень 1</b><span>Найти: отыскать факт в тексте, таблице или графике</span></div>
+<div class="lvl"><b>Уровень 2</b><span>Интегрировать: сопоставить данные и сделать вывод</span></div>
+<div class="lvl"><b>Уровень 3</b><span>Оценить: проверить аргумент, заметить, чего в тексте не хватает</span></div>
+</div>
+</section>
+
+<section id="school">
+<h2>Как это встроено в школу</h2>
+<div class="grid">
+<div class="card"><h3>Формат</h3><p>15–20 минут 3 раза в неделю на уроке или в продлёнке. Не «ещё одно приложение дома».</p></div>
+<div class="card"><h3>Диагностика на входе</h3><p>Короткий тест определяет уровень, дальше у каждого свой путь.</p></div>
+<div class="card"><h3>Панель учителя</h3><p>Карта класса по навыкам («не умеют работать с таблицами») вместо просто оценок. Основа для 5-минутных разборов у доски.</p></div>
+<div class="card"><h3>Два языка</h3><p>Казахский и русский с самого начала. Качество модели на казахском проверяется отдельно, без опоры на общие бенчмарки.</p></div>
+<div class="card"><h3>Подготовка учителей</h3><p>1–2 дня обучения и опорные карточки. Без этого технология не приживётся.</p></div>
+</div>
+</section>
+
+<section id="pilot">
+<h2>Как проверить, что работает</h2>
+<p>Пилот в 30–40 сельских школах, половина из них контрольные.</p>
+<div class="grid">
+<div class="card"><h3>Метрики</h3><ul><li>Доля учеников на уровне 2 и выше (до и после семестра)</li><li>Рост по типам вопросов</li><li>Регулярность использования</li><li>Разрыв город–село</li></ul></div>
+<div class="card"><h3>Критерий успеха</h3><p>Фиксируется заранее. Например, <b style="color:var(--acc)">+10 п.п.</b> к доле достигших уровня 2 в пилотных школах относительно контрольных.</p></div>
+</div>
+</section>
+
+<section id="risks">
+<h2>Риски и ответы</h2>
+<div class="risk">
+<div class="h">Слабый казахский в моделях</div><div class="s">Экспертная проверка банка, тесты на реальных школьниках</div>
+<div class="h">Зависимость от подсказок</div><div class="s">Лимит подсказок, итоговые проверки без ИИ</div>
+<div class="h">Нагрузка на учителя</div><div class="s">Минимальный интерфейс, ничего не настраивать</div>
+<div class="h">Данные детей</div><div class="s">Хранение локально, обезличивание при синхронизации</div>
+<div class="h">Нет оборудования</div><div class="s">Бумажный режим</div>
+</div>
+</section>
+
+<section id="scale">
+<h2>Почему это масштабируется</h2>
+<p>Дорогая часть, то есть генерация и проверка контента, делается один раз для всей страны. На школу приходится только недорогой хаб. Один банк заданий используют сотни школ, а настройка под уровень каждого ученика происходит локально.</p>
+<div class="cta"><b>Итог:</b> облако создаёт и проверяет, школа учит офлайн, бумага страхует. Так ИИ доходит до тех, у кого нет хорошего интернета.</div>
+</section>
+</main>
+
+<footer><div class="wrap">Данные PISA-2025 и PISA-2022 по материалам Azattyq Ruhy, BES.media, Forbes Kazakhstan, «Казахстанской правды».</div></footer>
+</body>
+</html>
